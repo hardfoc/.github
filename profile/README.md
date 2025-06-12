@@ -12,7 +12,7 @@
 
 - ✅ **Hardware-accelerated FOC** using external FOC driver peripherals
 - ✅ **Portable HAL architecture** for rapid adaptation to new MCUs
-- ✅ **Modular design** supporting BLDC, PMSM, stepper motors, and DC
+- ✅ **Modular design** supporting BLDC, PMSM, stepper, and DC motors
 - ✅ **Sensor-agnostic**: supports encoders, Hall sensors, sensorless control
 - ✅ **Driver-flexible**: works with gate drivers, integrated drivers, and smart FETs
 - ✅ **Open-source and community-driven**
