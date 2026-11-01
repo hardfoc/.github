@@ -27,6 +27,19 @@ Description and homepage are set with `gh repo edit`; topics are replaced as a
 set with `gh api -X PUT repos/<org>/<repo>/topics`, so topics added by hand in
 the GitHub UI are removed on the next `--apply`. Add them to the JSON instead.
 
+## CODEOWNERS
+
+GitHub has no org-wide CODEOWNERS, so each repo carries `.github/CODEOWNERS`.
+`add-codeowners.sh` opens one PR per repo on branch `chore/codeowners`
+(dry run by default, `--apply` to open PRs). It skips repos that already have
+the file or the branch, and the repos owned by other workstreams
+(`hf-hal-*-v1`, `hardfoc-*-v1`, `hf-tmc5160-driver`).
+
+```bash
+./org/add-codeowners.sh            # list
+./org/add-codeowners.sh --apply    # open PRs
+```
+
 ## Editing the metadata
 
 Edit `org-metadata.json`, run the dry run, open a PR. After it merges, run
