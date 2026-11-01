@@ -1,57 +1,106 @@
-## Hi there 👋
-    
-# 🚀 Welcome to **HardFOC** – Hardware-Accelerated Field Oriented Control
+# HardFOC
 
-**HardFOC** is a high-performance, hardware-centric Field Oriented Control (FOC) framework designed for embedded systems. Unlike software-only solutions, HardFOC leverages hardware based FOC drivers to achieve ultra-efficient, real-time motor control with minimal CPU overhead.
+HardFOC is firmware for ESP32-based motor and valve controller boards, built
+on ESP-IDF and FreeRTOS. The name stands for hardware-based field-oriented
+control: motor commutation runs on dedicated FOC driver ICs (such as the
+Trinamic TMC9660) instead of in MCU software.
 
-> 💡 **HardFOC** stands for **Hardware-based FOC**, not because it's hard — but because it's fast, portable, and built for real-world embedded applications.
+There are two boards today:
 
----
+- **Vortex V1**: motor controller (ESP32-C6, TMC9660, AS5047U encoder).
+- **Flux V1**: valve controller with on/off and proportional solenoid
+  channels (TLE92466ED, MAX22200).
 
-## 🎯 Project Goals
+## How the code is layered
 
-- ✅ **Hardware-accelerated FOC** using external FOC driver peripherals
-- ✅ **Portable HAL architecture** for rapid adaptation to new MCUs
-- ✅ **Modular design** supporting BLDC, PMSM, stepper, and DC motors
-- ✅ **Sensor-agnostic**: supports encoders, Hall sensors, sensorless control
-- ✅ **Driver-flexible**: works with gate drivers, integrated drivers, and smart FETs
-- ✅ **Open-source and community-driven**
+Each box is a separate repository; each arrow is a Git submodule pinned to a
+commit or tag. Chip drivers have no platform dependencies and can be used on
+their own.
 
----
+```mermaid
+flowchart LR
+  drv["Chip drivers<br/>hf-*-driver"] --> cd["hf-core-drivers"]
+  iw["hf-internal-interface-wrap<br/>hf-pincfg"] --> cd
+  ut["hf-utils-general<br/>hf-utils-rtos-wrap<br/>hf-utils-canopen"] --> cu["hf-core-utils"]
+  cd --> core["hf-core"]
+  cu --> core
+  core --> hal["Board HALs<br/>hf-hal-vortex-v1<br/>hf-hal-flux-v1"]
+  hal --> prod["Products<br/>hardfoc-vortex-v1<br/>hardfoc-flux-v1"]
+```
 
-## 🌈 Contribution Guidelines
+## Repositories
 
-We welcome contributions from developers, engineers, and enthusiasts! Whether you're porting to a new MCU, improving documentation, or building new drivers — your help is appreciated.
+### Products and board HALs
 
-Start here 👉 [CONTRIBUTING.md](https://github.com/hardfoc/HardFOC/blob/main/CONTRIBUTING.md)
+| Repo | Role |
+|------|------|
+| [hardfoc-vortex-v1](https://github.com/hardfoc/hardfoc-vortex-v1) | Vortex V1 motor controller application firmware |
+| [hf-hal-vortex-v1](https://github.com/hardfoc/hf-hal-vortex-v1) | Vortex V1 board HAL, built on hf-core |
+| [hf-hal-flux-v1](https://github.com/hardfoc/hf-hal-flux-v1) | Flux V1 valve controller board HAL, built on hf-core |
 
----
+### Core
 
-## 👩‍💻 Useful Resources
+| Repo | Role |
+|------|------|
+| [hf-core](https://github.com/hardfoc/hf-core) | Shared platform layer: device handlers, RTOS utilities, driver integration, CANopen |
+| [hf-core-drivers](https://github.com/hardfoc/hf-core-drivers) | Collects the chip drivers, interface wrap and pin config as submodules |
+| [hf-core-utils](https://github.com/hardfoc/hf-core-utils) | Collects the utility libraries as submodules |
+| [hf-internal-interface-wrap](https://github.com/hardfoc/hf-internal-interface-wrap) | Peripheral base classes (GPIO, ADC, I2C, SPI, UART, CAN, PWM, ...) with ESP-IDF implementations |
+| [hf-pincfg](https://github.com/hardfoc/hf-pincfg) | Functional pin definitions and per-board pin maps |
+| [hf-utils-general](https://github.com/hardfoc/hf-utils-general) | Header-only C++17 helpers: PID, filters, curve fitting, buffers, monitors |
+| [hf-utils-rtos-wrap](https://github.com/hardfoc/hf-utils-rtos-wrap) | C++ wrappers over FreeRTOS primitives |
+| [hf-utils-canopen](https://github.com/hardfoc/hf-utils-canopen) | CANopen NMT/SDO frame builders and CiA 402 helpers |
 
-- **Getting Started**: [docs.hardfoc.dev/getting-started](https://docs.hardfoc.dev/getting-started)
-- **API Reference**: [docs.hardfoc.dev/api](https://docs.hardfoc.dev/api)
-- **Porting Guide**: [docs.hardfoc.dev/porting](https://docs.hardfoc.dev/porting)
-- **Hardware Setup**: [docs.hardfoc.dev/hardware](https://docs.hardfoc.dev/hardware)
+### Chip drivers
 
----
+Hardware-agnostic C++ drivers. Each one takes a small bus adapter you
+implement for your platform, and ships ESP32 examples and docs.
 
-## 🍿 Fun Facts
+| Repo | Device |
+|------|--------|
+| [hf-ads7952-driver](https://github.com/hardfoc/hf-ads7952-driver) | TI ADS7952 12-bit, 12-channel SAR ADC (SPI) |
+| [hf-ads9324-driver](https://github.com/hardfoc/hf-ads9324-driver) | TI ADS9324 16-bit, 16-channel simultaneous-sampling SAR ADC (SPI) |
+| [hf-alicat-basis2-driver](https://github.com/hardfoc/hf-alicat-basis2-driver) | Alicat BASIS-2 mass flow meters and controllers (Modbus RTU) |
+| [hf-as5047u-driver](https://github.com/hardfoc/hf-as5047u-driver) | ams OSRAM AS5047U magnetic rotary encoder (SPI) |
+| [hf-at25040-driver](https://github.com/hardfoc/hf-at25040-driver) | Microchip AT25010B/AT25020B/AT25040B EEPROMs (SPI) |
+| [hf-bmp581-driver](https://github.com/hardfoc/hf-bmp581-driver) | Bosch BMP581 barometric pressure sensor (I2C/SPI) |
+| [hf-bno08x-driver](https://github.com/hardfoc/hf-bno08x-driver) | CEVA BNO080/BNO085/BNO086 IMU and sensor-fusion hub (I2C/SPI/UART) |
+| [hf-dynamixel-driver](https://github.com/hardfoc/hf-dynamixel-driver) | ROBOTIS DYNAMIXEL X-series servos, Protocol 2.0 (UART) |
+| [hf-fdo2-driver](https://github.com/hardfoc/hf-fdo2-driver) | PyroScience FDO2-G2 optical oxygen sensor (UART) |
+| [hf-isf15acp4-driver](https://github.com/hardfoc/hf-isf15acp4-driver) | NKK ISF15ACP4 RGB OLED pushbutton (SPI) |
+| [hf-max22200-driver](https://github.com/hardfoc/hf-max22200-driver) | ADI MAX22200 octal solenoid and motor driver (SPI) |
+| [hf-mcp9700-driver](https://github.com/hardfoc/hf-mcp9700-driver) | Microchip MCP9700/MCP9700A analog temperature sensor (ADC) |
+| [hf-ntc-thermistor-driver](https://github.com/hardfoc/hf-ntc-thermistor-driver) | NTC thermistors (lookup table, Beta, Steinhart-Hart over ADC) |
+| [hf-pca9685-driver](https://github.com/hardfoc/hf-pca9685-driver) | NXP PCA9685 16-channel 12-bit PWM controller (I2C) |
+| [hf-pcal95555-driver](https://github.com/hardfoc/hf-pcal95555-driver) | NXP PCA9555 / PCAL9555A 16-bit I/O expanders (I2C) |
+| [hf-pf1550-driver](https://github.com/hardfoc/hf-pf1550-driver) | NXP PF1550 PMIC with Li-ion charger (I2C) |
+| [hf-se050-driver](https://github.com/hardfoc/hf-se050-driver) | NXP SE050 EdgeLock secure element (I2C) |
+| [hf-sfm-flow-meter-driver](https://github.com/hardfoc/hf-sfm-flow-meter-driver) | Sensirion SF06-family gas mass flow meters, e.g. SFM4300 (I2C) |
+| [hf-tle92466ed-driver](https://github.com/hardfoc/hf-tle92466ed-driver) | Infineon TLE92466ED six-channel low-side solenoid driver (SPI) |
+| [hf-tmc5160-driver](https://github.com/hardfoc/hf-tmc5160-driver) | Trinamic TMC5130/TMC5160 stepper motor controllers (SPI/UART) |
+| [hf-tmc9660-driver](https://github.com/hardfoc/hf-tmc9660-driver) | Trinamic TMC9660 BLDC/stepper FOC motor controller (SPI/UART, TMCL) |
+| [hf-vortex-driver](https://github.com/hardfoc/hf-vortex-driver) | CANopen (CiA 301/402) client for Vortex controllers over CAN |
+| [hf-ws2812-rmt-driver](https://github.com/hardfoc/hf-ws2812-rmt-driver) | WS2812 / NeoPixel LEDs via the ESP32 RMT peripheral |
 
-- Our team loves coffee and donuts for breakfast! ☕🍩
-- We have team members from 5 different countries 🌍
-- We believe in the power of open-source and community collaboration 🤝
+### CI and tooling
 
----
+| Repo | Role |
+|------|------|
+| [hf-general-ci-tools](https://github.com/hardfoc/hf-general-ci-tools) | Reusable workflows: C++ lint and analysis, Markdown/YAML lint, docs publish, link check, release |
+| [hf-espidf-ci-tools](https://github.com/hardfoc/hf-espidf-ci-tools) | Reusable workflows to build and release multi-app ESP-IDF projects |
+| [hf-espidf-project-tools](https://github.com/hardfoc/hf-espidf-project-tools) | Scripts to install ESP-IDF and build/flash multi-app projects from a YAML config |
 
-## 🧙 Remember
+### Other
 
-You can do mighty things with the power of [Markdown](https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
+| Repo | Role |
+|------|------|
+| [hardfoc.github.io](https://github.com/hardfoc/hardfoc.github.io) | Organization website |
+| [org-discussions](https://github.com/hardfoc/org-discussions) | Questions and announcements |
+| [hf-drawio-diag](https://github.com/hardfoc/hf-drawio-diag) | draw.io diagram sources |
+| [hf-utils-and-drivers](https://github.com/hardfoc/hf-utils-and-drivers) | Legacy; replaced by hf-core |
 
----
+## Contributing
 
-## 📣 Stay Connected
-
-[![GitHub Stars](https://img.shields.io/github/stars/hardfoc/HardFOC?style=social)](https://github.com/hardfoc/HardFOC)  
-[![YouTube](https://img.shields.io/youtube/channel/subscribers/UCxxxxxxx?style=social)](https://youtube.com/@hardfoc)  
-[![Discord](https://img.shields.io/discord/1234567890?label=Discord&logo=discord&style=social)](https://discord.gg/hardfoc)
+See [CONTRIBUTING.md](https://github.com/hardfoc/.github/blob/main/CONTRIBUTING.md).
+Report security issues privately as described in
+[SECURITY.md](https://github.com/hardfoc/.github/blob/main/SECURITY.md).
