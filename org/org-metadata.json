@@ -1,0 +1,823 @@
+{
+  "generated": "2026-11-01",
+  "org": "hardfoc",
+  "standard": {
+    "description_templates": {
+      "driver": "Hardware-agnostic C++<std> driver for the <Vendor> <CHIP> <function> (<bus>). Part of the HardFOC ecosystem.",
+      "core-lib": "HardFOC <component>: <what it provides>.",
+      "hal": "HardFOC hardware abstraction layer for the <Board> V<n> board (ESP32 / ESP-IDF), built on hf-core.",
+      "product": "HardFOC <Board> V<n> <board type> application firmware (ESP32 / ESP-IDF).",
+      "tooling": "HardFOC <tool name>: <purpose>.",
+      "docs": "HardFOC <doc set>: <scope>.",
+      "legacy": "[Legacy] <what it was>; superseded by <repo>."
+    },
+    "topic_vocabulary": {
+      "always": [
+        "hardfoc"
+      ],
+      "code_repos": [
+        "embedded",
+        "cpp"
+      ],
+      "role": [
+        "driver",
+        "library",
+        "hal",
+        "firmware",
+        "ci-tools",
+        "documentation",
+        "legacy"
+      ],
+      "portability": [
+        "hardware-agnostic"
+      ],
+      "platform": [
+        "esp32",
+        "esp-idf",
+        "freertos"
+      ],
+      "bus": [
+        "spi",
+        "i2c",
+        "uart",
+        "rs485",
+        "can",
+        "canopen",
+        "modbus",
+        "adc",
+        "rmt",
+        "pwm",
+        "gpio"
+      ],
+      "function": [
+        "adc",
+        "encoder",
+        "magnetic-encoder",
+        "eeprom",
+        "imu",
+        "sensor-fusion",
+        "pressure-sensor",
+        "flow-meter",
+        "mass-flow-controller",
+        "gas-sensor",
+        "oxygen-sensor",
+        "temperature-sensor",
+        "thermistor",
+        "ntc",
+        "motor-driver",
+        "motor-control",
+        "stepper-motor",
+        "bldc",
+        "foc",
+        "solenoid-driver",
+        "gpio-expander",
+        "pmic",
+        "battery-charger",
+        "secure-element",
+        "security",
+        "led",
+        "ws2812",
+        "neopixel",
+        "oled",
+        "display",
+        "servo",
+        "utilities",
+        "rtos"
+      ],
+      "vendor": [
+        "texas-instruments",
+        "ams",
+        "bosch",
+        "ceva",
+        "nxp",
+        "microchip",
+        "infineon",
+        "trinamic",
+        "analog-devices",
+        "alicat",
+        "pyroscience",
+        "sensirion",
+        "robotis",
+        "nkk"
+      ],
+      "chip": "lowercase part number, e.g. tmc9660",
+      "board": [
+        "vortex",
+        "flux"
+      ]
+    },
+    "homepage_rule": "https://hardfoc.github.io/<repo>/ when docs are deployed and return 200; empty otherwise (private repos: empty).",
+    "versioning": "SemVer tags vX.Y.Z (pre-release vX.Y.Z-rc.N) on main; every tag gets a GitHub Release named vX.Y.Z with generated notes; docs publish on tag push."
+  },
+  "repos": [
+    {
+      "repo": ".github",
+      "description": "HardFOC organization profile and default community health files.",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "community-health"
+      ]
+    },
+    {
+      "repo": "hardfoc-all-solutions",
+      "description": "Umbrella repository aggregating all HardFOC board firmware solutions (application + HAL + core) as submodules.",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "firmware",
+        "monorepo"
+      ]
+    },
+    {
+      "repo": "hardfoc-flux-v1",
+      "description": "HardFOC Flux V1 valve-controller application firmware (ESP32 / ESP-IDF).",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "firmware",
+        "esp32",
+        "esp-idf",
+        "flux",
+        "valve-control"
+      ]
+    },
+    {
+      "repo": "hardfoc-vortex-v1",
+      "description": "HardFOC Vortex V1 motor controller application firmware (ESP32 / ESP-IDF).",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "firmware",
+        "esp32",
+        "esp-idf",
+        "motor-control",
+        "foc",
+        "vortex"
+      ]
+    },
+    {
+      "repo": "hardfoc.github.io",
+      "description": "HardFOC organization website (GitHub Pages).",
+      "homepage": "https://hardfoc.github.io/",
+      "topics": [
+        "hardfoc",
+        "website",
+        "github-pages",
+        "documentation"
+      ]
+    },
+    {
+      "repo": "hf-ads7952-driver",
+      "description": "Hardware-agnostic C++20 driver for the TI ADS7952 12-bit, 12-channel SAR ADC (SPI). Part of the HardFOC ecosystem.",
+      "homepage": "https://hardfoc.github.io/hf-ads7952-driver/",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "adc",
+        "spi",
+        "texas-instruments",
+        "ads7952"
+      ]
+    },
+    {
+      "repo": "hf-ads9324-driver",
+      "description": "Hardware-agnostic C++20 driver for the TI ADS9324 16-channel, 16-bit simultaneous-sampling SAR ADC (SPI). Part of the HardFOC ecosystem.",
+      "homepage": "https://hardfoc.github.io/hf-ads9324-driver/",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "adc",
+        "spi",
+        "texas-instruments",
+        "ads9324"
+      ]
+    },
+    {
+      "repo": "hf-alicat-basis2-driver",
+      "description": "Hardware-agnostic C++17 driver for Alicat BASIS-2 mass flow meters/controllers (Modbus RTU over UART). Part of the HardFOC ecosystem.",
+      "homepage": "https://hardfoc.github.io/hf-alicat-basis2-driver/",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "flow-meter",
+        "mass-flow-controller",
+        "modbus",
+        "uart",
+        "alicat",
+        "basis2"
+      ]
+    },
+    {
+      "repo": "hf-all-hals",
+      "description": "Umbrella repository aggregating all HardFOC board HALs (Vortex V1, Flux V1) as submodules.",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "hal",
+        "monorepo"
+      ]
+    },
+    {
+      "repo": "hf-as5047u-driver",
+      "description": "Hardware-agnostic C++20 driver for the ams OSRAM AS5047U magnetic rotary position encoder (SPI). Part of the HardFOC ecosystem.",
+      "homepage": "https://hardfoc.github.io/hf-as5047u-driver/",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "encoder",
+        "magnetic-encoder",
+        "spi",
+        "ams",
+        "as5047u",
+        "foc"
+      ]
+    },
+    {
+      "repo": "hf-at25040-driver",
+      "description": "Hardware-agnostic C++17 driver for Microchip AT25010B/AT25020B/AT25040B serial EEPROMs (SPI). Part of the HardFOC ecosystem.",
+      "homepage": "https://hardfoc.github.io/hf-at25040-driver/",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "eeprom",
+        "spi",
+        "microchip",
+        "at25040",
+        "at25040b",
+        "at25010b",
+        "at25020b"
+      ]
+    },
+    {
+      "repo": "hf-bmp581-driver",
+      "description": "Header-only C++17 driver for the Bosch BMP581 barometric pressure sensor (I2C/SPI). Part of the HardFOC ecosystem.",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "pressure-sensor",
+        "i2c",
+        "spi",
+        "bosch",
+        "bmp581"
+      ]
+    },
+    {
+      "repo": "hf-bno08x-driver",
+      "description": "Hardware-agnostic C++ driver for the CEVA (Hillcrest) BNO080/BNO085/BNO086 9-axis IMU and sensor-fusion hub (SH-2 over I2C/SPI/UART). Part of the HardFOC ecosystem.",
+      "homepage": "https://hardfoc.github.io/hf-bno08x-driver/",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "imu",
+        "sensor-fusion",
+        "i2c",
+        "spi",
+        "uart",
+        "ceva",
+        "bno08x",
+        "bno085",
+        "bno080",
+        "bno086"
+      ]
+    },
+    {
+      "repo": "hf-core",
+      "description": "HardFOC core platform: aggregates hf-core-drivers and hf-core-utils (handlers, RTOS utilities, CANopen, driver integration) for all HardFOC boards.",
+      "homepage": "https://hardfoc.github.io/hf-core/",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "library",
+        "esp32",
+        "esp-idf",
+        "motor-control",
+        "foc",
+        "platform"
+      ]
+    },
+    {
+      "repo": "hf-core-drivers",
+      "description": "HardFOC core drivers: collection of internal (ESP-IDF interface, pin config) and external hardware-agnostic device drivers as submodules.",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "library",
+        "driver",
+        "esp32",
+        "esp-idf"
+      ]
+    },
+    {
+      "repo": "hf-core-utils",
+      "description": "HardFOC core utilities: general utilities, RTOS wrapper and CANopen helpers as submodules.",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "library",
+        "utilities",
+        "rtos",
+        "canopen"
+      ]
+    },
+    {
+      "repo": "hf-development-handbook",
+      "description": "HardFOC development handbook: cross-repo policies, architecture and coding patterns for core, HAL and application layers.",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "documentation",
+        "handbook",
+        "guidelines"
+      ]
+    },
+    {
+      "repo": "hf-drawio-diag",
+      "description": "HardFOC architecture and hardware diagrams (draw.io sources).",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "diagrams",
+        "drawio",
+        "documentation"
+      ]
+    },
+    {
+      "repo": "hf-dynamixel-driver",
+      "description": "C++17 wrapper around the ROBOTIS DYNAMIXEL SDK for DYNAMIXEL X-series smart servos (Protocol 2.0, half-duplex UART). Part of the HardFOC ecosystem.",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "servo",
+        "uart",
+        "robotis",
+        "dynamixel"
+      ]
+    },
+    {
+      "repo": "hf-espidf-ci-tools",
+      "description": "HardFOC ESP-IDF CI tools: reusable GitHub Actions workflows to build and release multi-app ESP-IDF projects from a YAML config.",
+      "homepage": "https://hardfoc.github.io/hf-espidf-ci-tools/",
+      "topics": [
+        "hardfoc",
+        "esp-idf",
+        "esp32",
+        "ci",
+        "github-actions",
+        "ci-tools"
+      ]
+    },
+    {
+      "repo": "hf-espidf-project-tools",
+      "description": "HardFOC ESP-IDF project tools: scripts to install the right ESP-IDF version and build/flash multi-app projects from a YAML config.",
+      "homepage": "https://hardfoc.github.io/hf-espidf-project-tools/",
+      "topics": [
+        "hardfoc",
+        "esp-idf",
+        "esp32",
+        "build-tools",
+        "scripts",
+        "yaml"
+      ]
+    },
+    {
+      "repo": "hf-fdo2-driver",
+      "description": "Hardware-agnostic C++17 driver for PyroScience FDO2-G2 optical oxygen sensors (UART). Part of the HardFOC ecosystem.",
+      "homepage": "https://hardfoc.github.io/hf-fdo2-driver/",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "oxygen-sensor",
+        "gas-sensor",
+        "uart",
+        "pyroscience",
+        "fdo2"
+      ]
+    },
+    {
+      "repo": "hf-general-ci-tools",
+      "description": "HardFOC general CI tools: reusable GitHub Actions workflows (C++ lint and static analysis, Markdown/YAML lint, docs publish, link check, release) for all HardFOC repos.",
+      "homepage": "https://hardfoc.github.io/hf-general-ci-tools/",
+      "topics": [
+        "hardfoc",
+        "ci",
+        "github-actions",
+        "ci-tools",
+        "doxygen",
+        "cpp"
+      ]
+    },
+    {
+      "repo": "hf-hal-flux-v1",
+      "description": "HardFOC hardware abstraction layer for the Flux V1 valve-controller board (ESP32 / ESP-IDF), built on hf-core.",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "hal",
+        "esp32",
+        "esp-idf",
+        "flux",
+        "valve-control"
+      ]
+    },
+    {
+      "repo": "hf-hal-vortex-v1",
+      "description": "HardFOC hardware abstraction layer for the Vortex V1 motor controller board (ESP32 / ESP-IDF), built on hf-core.",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "hal",
+        "esp32",
+        "esp-idf",
+        "motor-control",
+        "foc",
+        "vortex"
+      ]
+    },
+    {
+      "repo": "hf-internal-interface-wrap",
+      "description": "HardFOC internal interface layer: hardware-agnostic C++ peripheral base classes (GPIO, ADC, I2C, SPI, UART, CAN, PWM, NVS, timers, ...) with ESP32 / ESP-IDF implementations and STM32 and host ports.",
+      "homepage": "https://hardfoc.github.io/hf-internal-interface-wrap/",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "library",
+        "esp32",
+        "esp-idf",
+        "hal",
+        "gpio",
+        "i2c",
+        "spi",
+        "uart",
+        "can",
+        "adc",
+        "pwm",
+        "stm32"
+      ]
+    },
+    {
+      "repo": "hf-isf15acp4-driver",
+      "description": "Hardware-agnostic C++20 driver for the NKK ISF15ACP4 96x64 RGB OLED SmartDisplay pushbutton (SPI). Part of the HardFOC ecosystem.",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "oled",
+        "display",
+        "spi",
+        "nkk",
+        "isf15acp4"
+      ]
+    },
+    {
+      "repo": "hf-max22200-driver",
+      "description": "Hardware-agnostic C++20 driver for the ADI MAX22200 octal solenoid and motor driver (SPI). Part of the HardFOC ecosystem.",
+      "homepage": "https://hardfoc.github.io/hf-max22200-driver/",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "solenoid-driver",
+        "spi",
+        "analog-devices",
+        "max22200"
+      ]
+    },
+    {
+      "repo": "hf-mcp9700-driver",
+      "description": "Hardware-agnostic C++17 driver for the Microchip MCP9700/MCP9700A analog temperature sensor (ADC). Part of the HardFOC ecosystem.",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "temperature-sensor",
+        "adc",
+        "microchip",
+        "mcp9700"
+      ]
+    },
+    {
+      "repo": "hf-ntc-thermistor-driver",
+      "description": "Hardware-agnostic C++ NTC thermistor driver (lookup-table and Beta/Steinhart-Hart conversion over ADC). Part of the HardFOC ecosystem.",
+      "homepage": "https://hardfoc.github.io/hf-ntc-thermistor-driver/",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "temperature-sensor",
+        "thermistor",
+        "ntc",
+        "adc"
+      ]
+    },
+    {
+      "repo": "hf-pca9685-driver",
+      "description": "Hardware-agnostic C++ driver for the NXP PCA9685 16-channel 12-bit PWM controller (I2C). Part of the HardFOC ecosystem.",
+      "homepage": "https://hardfoc.github.io/hf-pca9685-driver/",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "pwm",
+        "i2c",
+        "nxp",
+        "pca9685"
+      ]
+    },
+    {
+      "repo": "hf-pcal95555-driver",
+      "description": "Hardware-agnostic C++ driver for the NXP PCA9555 / PCAL9555A 16-bit I/O expanders (I2C). Part of the HardFOC ecosystem.",
+      "homepage": "https://hardfoc.github.io/hf-pcal95555-driver/",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "gpio-expander",
+        "i2c",
+        "nxp",
+        "pca9555",
+        "pcal9555a"
+      ]
+    },
+    {
+      "repo": "hf-pf1550-driver",
+      "description": "Header-only C++20 driver for the NXP PF1550 PMIC (3 buck, 3 LDO, Li-ion charger) (I2C). Part of the HardFOC ecosystem.",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "pmic",
+        "battery-charger",
+        "i2c",
+        "nxp",
+        "pf1550"
+      ]
+    },
+    {
+      "repo": "hf-pincfg",
+      "description": "HardFOC pin configuration: compile-time functional pin definitions and per-board pin maps (Vortex V1, Flux V1).",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "library",
+        "gpio",
+        "pin-configuration"
+      ]
+    },
+    {
+      "repo": "hf-se050-driver",
+      "description": "Hardware-agnostic C++17 driver for the NXP SE050 EdgeLock secure element (T=1 over I2C). Part of the HardFOC ecosystem.",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "secure-element",
+        "security",
+        "i2c",
+        "nxp",
+        "se050"
+      ]
+    },
+    {
+      "repo": "hf-sfm-flow-meter-driver",
+      "description": "Header-only C++17 driver for Sensirion SF06-family gas mass flow meters such as the SFM4300 (I2C). Part of the HardFOC ecosystem.",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "flow-meter",
+        "i2c",
+        "sensirion",
+        "sfm4300"
+      ]
+    },
+    {
+      "repo": "hf-tle92466ed-driver",
+      "description": "Hardware-agnostic C++20 driver for the Infineon TLE92466ED six-channel low-side solenoid driver (SPI). Part of the HardFOC ecosystem.",
+      "homepage": "https://hardfoc.github.io/hf-tle92466ed-driver/",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "solenoid-driver",
+        "spi",
+        "infineon",
+        "tle92466ed"
+      ]
+    },
+    {
+      "repo": "hf-tmc5160-driver",
+      "description": "Hardware-agnostic C++17 driver for Trinamic TMC5130/TMC5160 stepper motor controllers (SPI/UART). Part of the HardFOC ecosystem.",
+      "homepage": "https://hardfoc.github.io/hf-tmc5160-driver/",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "motor-driver",
+        "stepper-motor",
+        "spi",
+        "uart",
+        "trinamic",
+        "analog-devices",
+        "tmc5160",
+        "tmc5130"
+      ],
+      "skip": true,
+      "skip_reason": "Owned by another workstream; apply only with --include-skipped."
+    },
+    {
+      "repo": "hf-tmc9660-driver",
+      "description": "Hardware-agnostic C++20 driver for the Trinamic TMC9660 BLDC/FOC motor controller (SPI/UART, TMCL). Part of the HardFOC ecosystem.",
+      "homepage": "https://hardfoc.github.io/hf-tmc9660-driver/",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "motor-driver",
+        "bldc",
+        "foc",
+        "spi",
+        "uart",
+        "trinamic",
+        "analog-devices",
+        "tmc9660"
+      ]
+    },
+    {
+      "repo": "hf-utils-and-drivers",
+      "description": "[Legacy] Former combined HardFOC utils + drivers repo; superseded by hf-core (hf-core-utils, hf-core-drivers).",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "legacy",
+        "deprecated"
+      ]
+    },
+    {
+      "repo": "hf-utils-canopen",
+      "description": "HardFOC CANopen utilities: self-contained C++ builders for NMT and expedited SDO frames plus CiA 402 drive-control helpers.",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "library",
+        "can",
+        "canopen",
+        "hardware-agnostic",
+        "cia402"
+      ]
+    },
+    {
+      "repo": "hf-utils-general",
+      "description": "HardFOC general utilities: header-only C++17 helpers (PID, filters, curve fitting, circular buffers, variable monitors, CRC) with no RTOS or platform dependencies.",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "library",
+        "utilities",
+        "hardware-agnostic"
+      ]
+    },
+    {
+      "repo": "hf-utils-rtos-wrap",
+      "description": "HardFOC RTOS wrapper: hardware-agnostic C++ abstraction over FreeRTOS primitives (threads, mutexes, queues, timers).",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "library",
+        "rtos",
+        "freertos",
+        "hardware-agnostic"
+      ]
+    },
+    {
+      "repo": "hf-vortex-driver",
+      "description": "Hardware-agnostic C++20 CANopen (CiA 301/402) client for controlling HardFOC Vortex motor controllers over CAN. Part of the HardFOC ecosystem.",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "hardware-agnostic",
+        "can",
+        "canopen",
+        "motor-control",
+        "foc",
+        "vortex"
+      ]
+    },
+    {
+      "repo": "hf-ws2812-rmt-driver",
+      "description": "ESP32 RMT-based C++ driver for WS2812 / NeoPixel addressable RGB(W) LEDs. Part of the HardFOC ecosystem.",
+      "homepage": "https://hardfoc.github.io/hf-ws2812-rmt-driver/",
+      "topics": [
+        "hardfoc",
+        "embedded",
+        "cpp",
+        "driver",
+        "led",
+        "ws2812",
+        "neopixel",
+        "rmt",
+        "esp32",
+        "esp-idf"
+      ]
+    },
+    {
+      "repo": "org-discussions",
+      "description": "HardFOC organization-wide discussions and announcements.",
+      "homepage": "",
+      "topics": [
+        "hardfoc",
+        "discussions",
+        "community"
+      ]
+    }
+  ]
+}
