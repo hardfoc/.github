@@ -632,7 +632,7 @@
     },
     {
       "repo": "hf-se050-driver",
-      "description": "Hardware-agnostic C++17 driver for the NXP SE050 EdgeLock secure element (I2C, T=1 over I2C). Part of the HardFOC ecosystem.",
+      "description": "Hardware-agnostic C++17 driver for the NXP SE050 EdgeLock secure element (T=1 over I2C). Part of the HardFOC ecosystem.",
       "homepage": "",
       "topics": [
         "hardfoc",
