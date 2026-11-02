@@ -117,4 +117,3 @@ reusable `ru-ci-gate.yml` workflow.
 ./org/apply-rulesets.sh --apply    # create or update
 ```
 
-`hf-tmc5160-driver` is skipped unless named with `--repo`.

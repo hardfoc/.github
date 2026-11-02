@@ -697,9 +697,7 @@
         "analog-devices",
         "tmc5160",
         "tmc5130"
-      ],
-      "skip": true,
-      "skip_reason": "Owned by another workstream; apply only with --include-skipped."
+      ]
     },
     {
       "repo": "hf-tmc9660-driver",
