@@ -53,7 +53,7 @@ else
 fi
 
 # Repos the owner manages by hand; name them with --repo to include them.
-SKIP=" hf-tmc5160-driver "
+SKIP=" "
 
 for repo in "${REPOS[@]}"; do
   if ((${#ONLY[@]} == 0)) && [[ $SKIP == *" $repo "* ]]; then
