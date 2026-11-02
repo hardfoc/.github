@@ -89,3 +89,32 @@ repo's docs go live, set its `homepage` in the JSON and re-run `--apply`.
 
 SemVer tags `vX.Y.Z` (pre-release `vX.Y.Z-rc.N`) on `main`. Every tag gets a
 GitHub Release named `vX.Y.Z` with generated notes; docs publish on tag push.
+
+## Branch and tag protection
+
+`apply-rulesets.sh` applies the rulesets in `rulesets/` to every public,
+non-archived repo. The org is on GitHub Free, where org-level rulesets are not
+available and rulesets only protect public repos, so each repo gets its own
+copy. The script lists the private repos it cannot protect.
+
+| Ruleset | Applies to | Rules | Bypass |
+|---|---|---|---|
+| `main-integrity` | default branch | no deletion, no force-push, linear history | none |
+| `main-review` | default branch | pull request with 1 approving review, code-owner review, resolved conversations; squash merge only | org owners and repo admins, through a pull request |
+| `release-tags` | `v*.*.*` tags | no deletion, no moving | org owners |
+
+The review rule is a separate ruleset because GitHub applies a ruleset's
+bypass list to every rule in it: owners can merge without a second reviewer,
+while history protection still applies to everyone. Moving major tags such as
+`v1` are not covered, so the CI tools release workflows can update them.
+
+Required status checks are added per repo once that repo has a `CI gate`
+job. The check to require is `CI gate / gate` when the gate comes from the
+reusable `ru-ci-gate.yml` workflow.
+
+```bash
+./org/apply-rulesets.sh            # dry run
+./org/apply-rulesets.sh --apply    # create or update
+```
+
+`hf-tmc5160-driver` is skipped unless named with `--repo`.
