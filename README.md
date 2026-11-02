@@ -13,6 +13,3 @@ repository settings consistent.
 | [`org/org-metadata.json`](org/org-metadata.json) | Description, homepage and topics of every repository; the portal's catalogue reads it |
 | [`org/`](org/README.md) | Scripts that apply the metadata, rulesets, security settings and CODEOWNERS ([guide](org/README.md)) |
 
-## License
-
-The community files are offered for reuse in any HardFOC repository.
