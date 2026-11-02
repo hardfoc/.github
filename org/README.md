@@ -130,3 +130,16 @@ features need GitHub Advanced Security on private repos.
 ./org/apply-security.sh            # dry run: current state per repo
 ./org/apply-security.sh --apply    # enable whatever is off
 ```
+
+## Merge settings
+
+`apply-merge-settings.sh` turns on *Automatically delete head branches* in every
+non-archived repo, public and private, so a pull request's branch is deleted
+when it merges. GitHub retargets open pull requests based on that branch to its
+base first, so stacked pull requests keep working. A deleted branch can be
+restored from its merged pull request.
+
+```bash
+./org/apply-merge-settings.sh            # dry run: current state per repo
+./org/apply-merge-settings.sh --apply    # turn it on where it is off
+```
