@@ -452,7 +452,7 @@
     {
       "repo": "hf-hal-flux-v1",
       "description": "HardFOC hardware abstraction layer for the Flux V1 valve-controller board (ESP32 / ESP-IDF), built on hf-core.",
-      "homepage": "",
+      "homepage": "https://hardfoc.github.io/hf-hal-flux-v1/",
       "topics": [
         "hardfoc",
         "embedded",
