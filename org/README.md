@@ -117,3 +117,16 @@ reusable `ru-ci-gate.yml` workflow.
 ./org/apply-rulesets.sh --apply    # create or update
 ```
 
+
+## Security features
+
+`apply-security.sh` turns on GitHub's free security features for every public,
+non-archived repo: secret scanning, push protection, Dependabot alerts,
+Dependabot security updates, and private vulnerability reporting (the channel
+`SECURITY.md` points reporters to). Private repos are skipped because these
+features need GitHub Advanced Security on private repos.
+
+```bash
+./org/apply-security.sh            # dry run: current state per repo
+./org/apply-security.sh --apply    # enable whatever is off
+```
