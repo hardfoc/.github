@@ -33,6 +33,25 @@ wrong and fix the check.
 If your change affects behaviour on hardware, say in the PR which board you
 ran it on (Vortex V1, Flux V1, or a dev kit) and what you observed.
 
+## ESP-IDF configuration
+
+HardFOC ESP-IDF projects run FreeRTOS at 1000 Hz (`CONFIG_FREERTOS_HZ=1000`);
+hf-utils-rtos-wrap timing assumes at least 1 kHz for ms-precision delays,
+because it rounds a nonzero delay up to one tick. ESP-IDF's default is 100 Hz,
+which turns a 1 ms wait into 10 ms. This covers products, board HALs, `hf-core`
+and every driver's `examples/esp32` project.
+
+- Set it in `sdkconfig.defaults`. If the project commits a full `sdkconfig`,
+  set it there as well, because a committed `sdkconfig` takes precedence over
+  the defaults files.
+- Convert milliseconds with `pdMS_TO_TICKS()` or the rtos-wrap helpers; never
+  pass a raw tick count that assumes a particular rate. With
+  `CONFIG_FREERTOS_HZ=1000`, `pdMS_TO_TICKS()` wraps above about 71 minutes
+  (32-bit arithmetic), and the tick counter wraps after about 49.7 days, so
+  compare deadlines with `(int32_t)(now - deadline) > 0`, not `now > deadline`.
+- `hf-espidf-project-tools/setup_basic.sh` writes this setting into new
+  projects.
+
 ## How changes flow through submodules
 
 The stack is composed with Git submodules, each pinned to a commit or tag:
