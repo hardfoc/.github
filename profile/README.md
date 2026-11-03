@@ -40,10 +40,12 @@ Each box is one or more repositories; each arrow is a Git submodule pinned to a 
 | [Vortex V1 HAL](https://hardfoc.github.io/hf-hal-vortex-v1/latest/) | The motor controller board: hardware, pin map, managers, examples |
 | [Flux V1 HAL](https://hardfoc.github.io/hf-hal-flux-v1/latest/) | The valve controller board: hardware, pin map, managers, examples |
 | [CI tools](https://hardfoc.github.io/hf-general-ci-tools/latest/) | Reusable workflows and the documentation platform |
+| [Engineering standard](https://github.com/hardfoc/.github/blob/main/standards/README.md) | The rules every repository follows: layer contracts, errors, threading, naming, releases |
 
 ## Contributing
 
-Read [CONTRIBUTING.md](https://github.com/hardfoc/.github/blob/main/CONTRIBUTING.md) and the
+Read [CONTRIBUTING.md](https://github.com/hardfoc/.github/blob/main/CONTRIBUTING.md), the
+[engineering standard](https://github.com/hardfoc/.github/blob/main/standards/README.md) and the
 [code of conduct](https://github.com/hardfoc/.github/blob/main/CODE_OF_CONDUCT.md). Report vulnerabilities
 privately, as [SECURITY.md](https://github.com/hardfoc/.github/blob/main/SECURITY.md) describes; never in a public
 issue. Questions and announcements go to
