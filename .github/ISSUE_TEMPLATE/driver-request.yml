@@ -1,0 +1,62 @@
+name: Driver request
+description: A driver for a chip HardFOC does not support yet.
+labels: ["driver-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        New drivers follow the HardFOC driver contract:
+        https://github.com/hardfoc/.github/blob/main/standards/driver.md
+  - type: input
+    id: chip
+    attributes:
+      label: Chip
+      description: Vendor and part number, and any family members the driver should also cover.
+      placeholder: Bosch BMP585 (also BMP581)
+    validations:
+      required: true
+  - type: dropdown
+    id: bus
+    attributes:
+      label: Bus
+      multiple: true
+      options:
+        - SPI
+        - I2C
+        - UART / RS-485
+        - CAN / CANopen
+        - Analog (ADC)
+        - GPIO / PWM only
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: datasheet
+    attributes:
+      label: Datasheet
+      description: A public link to the datasheet and any application notes. Do not attach material under NDA.
+    validations:
+      required: true
+  - type: textarea
+    id: use
+    attributes:
+      label: What it is for
+      description: The board or product that needs it, and the features it must support first.
+    validations:
+      required: true
+  - type: dropdown
+    id: board
+    attributes:
+      label: Board
+      options:
+        - Vortex V1
+        - Flux V1
+        - A future HardFOC board
+        - Not for a HardFOC board
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Evaluation boards, timing or safety constraints, open-source drivers to compare against.

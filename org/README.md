@@ -88,7 +88,8 @@ repo's docs go live, set its `homepage` in the JSON and re-run `--apply`.
 ### Versioning
 
 SemVer tags `vX.Y.Z` (pre-release `vX.Y.Z-rc.N`) on `main`. Every tag gets a
-GitHub Release named `vX.Y.Z` with generated notes; docs publish on tag push.
+GitHub Release named `vX.Y.Z` whose body is the changelog section; docs publish
+on tag push. The full rules are in [standards/release.md](../standards/release.md).
 
 ## Branch and tag protection
 
@@ -116,7 +117,6 @@ reusable `ru-ci-gate.yml` workflow.
 ./org/apply-rulesets.sh            # dry run
 ./org/apply-rulesets.sh --apply    # create or update
 ```
-
 
 ## Security features
 
