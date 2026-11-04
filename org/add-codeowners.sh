@@ -16,7 +16,7 @@ BRANCH="chore/codeowners"
 OWNER=""
 MODE="dry-run"
 WORKDIR="${TMPDIR:-/tmp}/hardfoc-codeowners"
-EXCLUDE=(hf-hal-vortex-v1 hf-hal-flux-v1 hardfoc-vortex-v1 hardfoc-flux-v1 hf-tmc5160-driver)
+EXCLUDE=(hf-hal-vortex-v1 hf-hal-flux-v1 hardfoc-vortex-v1 hardfoc-flux-v1)
 ONLY=()
 
 usage() {
