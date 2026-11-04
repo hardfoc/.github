@@ -160,12 +160,20 @@ description templates and topic vocabulary are in [`org/README.md`](../org/READM
 1. **Create it from the template** for its kind, in the `hardfoc` org, public unless it is a product:
 
    ```bash
-   gh repo create hardfoc/hf-<chip>-driver --public --template hardfoc/<template-repo>
+   gh repo create hardfoc/hf-<chip>-driver --public --template hardfoc/hf-driver-template
+   gh repo clone hardfoc/hf-<chip>-driver && cd hf-<chip>-driver
+   python3 tools/scaffold.py --kind driver --name <chip> --bus spi|i2c|uart|adc --description "..."
    ```
 
    The template carries the shell: CMake layout, CI workflows with the gate, `_config/` with the org configs,
-   docs page set, `CODEOWNERS`, `AGENTS.md`, `CLAUDE.md` and `.claude/skills/`. Until a template exists for a kind,
-   copy the shell of the reference repository (`hf-ads9324-driver` for drivers) and remove its chip code.
+   docs page set, `CODEOWNERS`, `AGENTS.md`, `CLAUDE.md` and `.claude/skills/`. The templates by kind:
+
+   | Kind | Template | How |
+   | --- | --- | --- |
+   | Chip driver | [`hf-driver-template`](https://github.com/hardfoc/hf-driver-template) | `tools/scaffold.py --kind driver` |
+   | Library (utils, rtos-wrap, interface-wrap) | [`hf-driver-template`](https://github.com/hardfoc/hf-driver-template) | `tools/scaffold.py --kind library` |
+   | hf-core handler | `templates/handler/` in hf-core | its scaffold script, see hf-core `AGENTS.md` |
+   | Board HAL | `templates/board-hal/` in [`hf-hal-common`](https://github.com/hardfoc/hf-hal-common) | `tools/scaffold/new_board_hal.py` |
 2. **Add the metadata**: a PR to `hardfoc/.github` adding the repository to `org/org-metadata.json`. After it merges:
 
    ```bash
