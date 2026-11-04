@@ -96,7 +96,10 @@ the reference drivers report 2 findings in pca9685's `inc/` and `src/` and 25 in
 
 ## Using the configs in a repository
 
-1. Copy both files into the repository's `_config/` unchanged.
+1. Copy both files into the repository's `_config/` unchanged. Do not add root copies or symlinks
+   ([ADR-0011](adr/0011-repository-root-layout.md)); every tool is given the path:
+   `clang-format --style=file:_config/.clang-format`, `clang-tidy --config-file=_config/.clang-tidy`. Editors that
+   find the files only by name (clangd, CLion) use a local copy listed in `.gitignore`.
 2. Point the lint workflow at them:
 
    ```yaml
@@ -107,6 +110,7 @@ the reference drivers report 2 findings in pca9685's `inc/` and `src/` and 25 in
      clang_tidy_config: "_config/.clang-tidy"
    ```
 
+   The shared workflow links the files into its own checkout; the repository carries no link.
 3. Fix findings in new and changed code. Existing findings are fixed in their own PRs, not mixed into features.
 4. Suppress a finding only with `// NOLINT(<check>): <reason>` or `// NOLINTNEXTLINE(<check>): <reason>`. A bare
    `NOLINT` is not allowed.

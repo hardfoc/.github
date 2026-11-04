@@ -155,6 +155,18 @@ is the repository setting alone.
 and the portal's catalogue reads it. Change it by PR, then run `org/apply-metadata.sh --repo NAME --apply`. The
 description templates and topic vocabulary are in [`org/README.md`](../org/README.md#editing-the-metadata).
 
+## Repository root
+
+The root holds only what GitHub or a tool requires at the root and what a reader looks for first
+([ADR-0011](adr/0011-repository-root-layout.md)). For a driver or library: `README.md`, `LICENSE`, `CHANGELOG.md`,
+`CMakeLists.txt`, `AGENTS.md`, `CLAUDE.md`, `.gitignore`, `.gitmodules`, and the folders `.github/`, `.claude/`,
+`_config/`, `cmake/`, `docs/`, `examples/`, `inc/`, `src/`, `tests/`, `tools/`. Other kinds keep their own source
+folders and list any other root file a tool requires (such as `CMakePresets.json`) in their `AGENTS.md`.
+
+- Tool configuration lives in `_config/` and nowhere else; no symlinks anywhere in the repository.
+- `CONTRIBUTING.md` and `SECURITY.md` live in `.github/` (or are inherited from this repository).
+- A reviewer refuses a PR that adds anything else to the root without a reason a tool imposes.
+
 ## Creating a repository
 
 1. **Create it from the template** for its kind, in the `hardfoc` org, public unless it is a product:
@@ -165,8 +177,10 @@ description templates and topic vocabulary are in [`org/README.md`](../org/READM
    python3 tools/scaffold.py --kind driver --name <chip> --bus spi|i2c|uart|adc --description "..."
    ```
 
-   The template carries the shell: CMake layout, CI workflows with the gate, `_config/` with the org configs,
-   docs page set, `CODEOWNERS`, `AGENTS.md`, `CLAUDE.md` and `.claude/skills/`. The templates by kind:
+   The template carries the shell: CMake layout, CI workflows with the gate, `_config/` with every tool
+   configuration, docs page set, `CODEOWNERS`, `.github/CONTRIBUTING.md`, `.github/SECURITY.md`, `AGENTS.md`,
+   `CLAUDE.md` and `.claude/skills/`, in the [root layout](#repository-root) of ADR-0011. `--platforms host,esp32`
+   picks the example platforms (`host` always). The templates by kind:
 
    | Kind | Template | How |
    | --- | --- | --- |

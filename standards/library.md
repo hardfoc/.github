@@ -28,6 +28,14 @@ What the libraries between the drivers and the board HALs provide: `hf-internal-
 - **Host tests** in `tests/host/` on gcc and clang, and compiled doc snippets in `tests/docs/`.
 - **A Contract page** in the docs ([docs.md](docs.md#the-contract-page)).
 - C++20, GPL-3.0, the org clang configs, no exceptions, no RTTI.
+- **MCU-agnostic and the driver root layout** ([driver.md](driver.md#repository-layout),
+  [ADR-0011](adr/0011-repository-root-layout.md)): tool configuration in `_config/`, one root `CMakeLists.txt`,
+  platform code only in `examples/<platform>/`, and an `examples/host/` program built and run by the host tests. A
+  library meant for ESP-IDF adds the `ESP_PLATFORM` branch of the root `CMakeLists.txt` (and `_config/Kconfig` if it
+  has options) and an `examples/esp32/`; one that is not has neither (the template's default for `--kind library`).
+  The `mcu/` implementations of hf-internal-interface-wrap and the RTOS bindings of hf-utils-rtos-wrap are
+  platform code by purpose and the documented exception; their portable parts (`base/`, the wrappers' API) still
+  follow the rule.
 
 ## hf-internal-interface-wrap
 

@@ -12,7 +12,7 @@ page.
 
 ### Prepare (prepare-release workflow, or by hand)
 - [ ] `## [Unreleased]` rolled into `## [X.Y.Z] - YYYY-MM-DD`, empty `## [Unreleased]` left above it
-- [ ] Version bumped in `cmake/hf_<x>_build_settings.cmake`, every `idf_component.yml` and any hand-written header; the version test passes
+- [ ] Version bumped in `cmake/hf_<x>_build_settings.cmake`, `PROJECT_NUMBER` in `_config/Doxyfile` and any hand-written header (an `idf_component.yml` only where a repository publishes to the ESP Component Registry); the version test passes
 - [ ] Builds with `add_subdirectory()` and with `find_package(hf_<x>)` → `hf::<x>` (install-consumer test)
 - [ ] PR titled `Release vX.Y.Z`, reviewed and squash-merged
 
