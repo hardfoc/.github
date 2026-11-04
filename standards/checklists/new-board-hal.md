@@ -8,6 +8,7 @@ Copy this list into the tracking issue for a new `hf-hal-<board>-v<n>`. [hal.md]
 - [ ] Submodules `lib/core` (hf-core) and `lib/common` (hf-hal-common), both pinned to release tags; `version_lock.txt` checked in CI
 - [ ] Board pin map added to `hf-pincfg` as `HARDFOC_BOARD_<BOARD>` (its own PR, released first)
 - [ ] `CODEOWNERS`, `AGENTS.md`, `CLAUDE.md`, `.claude/skills/verify/` and `bump-pin/`; GPL-3.0; org clang configs
+- [ ] [Root layout](../repo-governance.md#repository-root): tool configuration (`mkdocs.yml` with `docs_dir: ../docs`, `Doxyfile`, clang configs) in `_config/`, no symlinks; at the root only what a tool needs there (`CMakePresets.json`, `version_lock.txt`) besides the usual files
 
 ### Structure
 - [ ] `board/<board>/`: bus table, chip list, pincfg selection; data only

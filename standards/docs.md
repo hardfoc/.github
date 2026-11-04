@@ -9,7 +9,9 @@ What every repository documents and where. The detailed writing rules, page temp
 - Every public code repository publishes a MkDocs site on the shared HardFOC platform at
   `https://hardfoc.github.io/<repo>/`, versioned per tag, with the Doxygen API reference under `api/`.
 - Pages live in `docs/`, navigation in `docs/.nav.yml` (five tabs: Home, Get started, Concepts, Guides,
-  Reference).
+  Reference). The site configuration is `_config/mkdocs.yml` with `docs_dir: ../docs`
+  ([ADR-0011](adr/0011-repository-root-layout.md)); build with `mkdocs build -f _config/mkdocs.yml --strict`, and pass
+  `mkdocs_config: _config/mkdocs.yml` and `doxygen_config: _config/Doxyfile` to the docs workflow.
 - The build is strict: broken links, pages missing from the nav, figures or generated regions that no longer match
   the code, and snippets that do not compile all fail CI.
 
@@ -17,8 +19,8 @@ What every repository documents and where. The detailed writing rules, page temp
 
 | Kind | Required pages |
 | --- | --- |
-| Driver | Home, Quickstart, Installation, Hardware, Architecture, **Contract**, API guide, API reference, Examples, Porting, Configuration (if it has a `Config` or Kconfig), Testing and CI, Troubleshooting, Changelog, Figures |
-| Library | Home, Quickstart, Concepts, **Contract**, API guide (one page per utility for a collection), API reference, Integration, Testing and CI, Changelog |
+| Driver | Home, Quickstart (starting with the host example), Installation (CMake first, then ESP-IDF), Platforms, Hardware, Architecture, **Contract**, API guide, API reference, Examples, Porting (with Editor setup), Configuration (if it has a `Config` or Kconfig), Testing and CI, Troubleshooting, Changelog, Figures |
+| Library | Home, Quickstart (starting with the host example), Concepts, **Contract**, API guide (one page per utility for a collection), API reference, Integration, Platforms, Testing and CI, Changelog |
 | `hf-core` | Home, Quickstart, Architecture, **Contract**, Handler model, one page per handler, Feature switches, Threading, Host build, API reference, Testing, Changelog |
 | Board HAL | Home with the board card, Quickstart, Hardware (block diagram, pin map, connectors, power), Architecture (managers, start-up order), **Contract**, one guide page per board function, API reference, Examples, Bring-up and troubleshooting, Changelog |
 | Product | Home, Getting started, Architecture (tasks, data flow), Operation (modes, commands, configuration, the fault catalogue), Hardware (links the HAL site), Development, Troubleshooting, Changelog, ADRs |
@@ -73,7 +75,8 @@ what is specific to the repository.
 ## Doxygen
 
 The API reference is generated from the public headers with the shared settings
-(`hf-general-ci-tools/_config/Doxyfile`):
+(`hf-general-ci-tools/_config/Doxyfile`). Each repository keeps its Doxyfile in `_config/Doxyfile` and runs Doxygen
+from the root (`doxygen _config/Doxyfile`), so the paths inside are relative to the root:
 
 | Setting | Value | Why |
 | --- | --- | --- |

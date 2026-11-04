@@ -1,7 +1,8 @@
 # Driver contract
 
-What every `hf-<chip>-driver` repository provides. A driver is a platform-free C++20 template on a CRTP port: the
-user writes the port for their MCU, and the driver works the same on ESP32, STM32 or a host test.
+What every `hf-<chip>-driver` repository provides. A driver is an MCU-agnostic C++20 template on a CRTP port: the
+user writes the port for their MCU, and the driver works the same on ESP32, STM32, any other MCU or a host. ESP32
+is the first example platform, not a dependency.
 
 The contract combines the best existing implementations: ads9324 (port, start-up and build), bmp581 (result type
 and config), pca9685 (code), pcal95555 (packaging) and mcp9700 (documentation). Examples below use a fictional
@@ -21,13 +22,33 @@ hf-<chip>-driver/
 ├── src/<chip>.ipp                 template implementation, included at the end of <chip>.hpp
 ├── cmake/hf_<chip>_build_settings.cmake   version, target name, sources: the single source of truth
 ├── cmake/hf_<chip>Config.cmake.in
-├── examples/esp32/                ESP-IDF example project with app_config.yml
+├── examples/
+│   ├── host/                      runs on any PC: host port over the register model, built and run in CI
+│   └── <platform>/                one self-contained folder per platform with its own port (esp32/: ESP-IDF)
 ├── tests/                         host tests, doc snippets, install consumer
 ├── docs/                          the driver page set (see docs.md)
-├── idf_component.yml
-├── CHANGELOG.md, LICENSE (GPL-3.0), README.md, Doxyfile, mkdocs.yml
-└── _config/                       org .clang-format, .clang-tidy, markdownlint, yamllint, lychee
+├── _config/                       all tool configuration: org .clang-format and .clang-tidy, Doxyfile,
+│                                  mkdocs.yml (docs_dir: ../docs), Kconfig, markdownlint, yamllint, lychee
+├── .github/                       workflows, CONTRIBUTING.md, SECURITY.md, CODEOWNERS, templates
+├── .claude/                       agent skills
+├── CMakeLists.txt                 the CMake library, and under ESP_PLATFORM the ESP-IDF component
+└── README.md, LICENSE (GPL-3.0), CHANGELOG.md, AGENTS.md, CLAUDE.md, .gitignore, .gitmodules
 ```
+
+The root holds only these entries ([ADR-0011](adr/0011-repository-root-layout.md)): what GitHub or a tool needs at
+the root and what a reader looks for first. Tool configuration MUST live in `_config/`, and every command and
+workflow names its path; the root MUST NOT hold copies of or symlinks to it.
+
+## Platforms
+
+- Driver code (`inc/`, `src/`) MUST NOT include an SDK, RTOS or vendor header. Platform code lives only in
+  `examples/<platform>/`: each folder carries its own port, an example program and a README, and builds on its own.
+- Every driver MUST ship `examples/host/`: a host port over the test register model and a program that initialises
+  the driver and reads it, built with the test flags and run by the host tests. It is the quickstart's first step.
+- A platform is added only with a CI job that builds its example. Plain CMake covers STM32, RP2040, nRF and the
+  host; the root `CMakeLists.txt` covers ESP-IDF. Zephyr, Arduino or PlatformIO manifests are added only when a
+  product needs them, never as a second copy of the sources.
+- MCU-bound drivers are the documented exception ([MCU-bound drivers](#mcu-bound-drivers-ws2812-rmt)).
 
 ## Namespace and names
 
@@ -248,7 +269,8 @@ struct Config {
 - Run-time configuration MUST be one `Config` struct with unit-suffixed fields and defaults taken from the
   datasheet. The struct is passed to `Initialize()`; individual setters MAY exist for values that change at run
   time.
-- Kconfig is an optional ESP-IDF layer. If a driver ships a `Kconfig`, the `CONFIG_<CHIP>_*` values MUST be read in
+- Kconfig is an optional ESP-IDF layer, in `_config/Kconfig` (registered with `KCONFIG` by the root
+  `CMakeLists.txt`). If a driver ships a `Kconfig`, the `CONFIG_<CHIP>_*` values MUST be read in
   exactly one header, `inc/<chip>_kconfig.hpp`, which produces a `Config` (`<chip>::KconfigDefaults()`). Kconfig
   values MUST NOT appear in public signatures, constructors or other headers.
 - A driver that reads `CONFIG_*` without shipping the `Kconfig` that defines it is a defect.
@@ -278,14 +300,20 @@ lifecycle and `Error`.
   ([ADR-0009](adr/0009-gpl-3-0.md)).
 - `cmake/hf_<chip>_build_settings.cmake` MUST be the single source of the version (`HF_<CHIP>_VERSION_MAJOR`,
   `_MINOR`, `_PATCH`), the target name and the source list. `project()`, the package version, the generated
-  `<chip>_version.h` and `idf_component.yml` all come from it, and a test checks that every copy agrees.
+  `<chip>_version.h` and `PROJECT_NUMBER` in `_config/Doxyfile` all come from it, and a test checks that every copy
+  agrees.
 - The target MUST have `EXPORT_NAME <chip>` and an `hf::<chip>` alias, so `hf::<chip>` works after both
   `add_subdirectory()` and `find_package(hf_<chip>)`.
 - Install rules MUST install every header the umbrella header includes, the `.ipp`, the generated version header
   and the package config.
 - Options are `HF_<CHIP>_BUILD_TESTS` (host tests and doc snippets, `OFF` by default) and
   `HF_<CHIP>_ENABLE_WARNINGS`.
-- Every repository MUST have `idf_component.yml` at the root and use the shared CI at `@v1`.
+- The root `CMakeLists.txt` MUST also be the ESP-IDF component: under `ESP_PLATFORM` it calls
+  `idf_component_register()` from the build settings, with `KCONFIG ${CMAKE_CURRENT_LIST_DIR}/_config/Kconfig`, and
+  returns before `project()`. ESP-IDF projects use the repository through `EXTRA_COMPONENT_DIRS`, a checkout under
+  `components/`, or a component-manager git dependency; there is no wrapper component and no `idf_component.yml`
+  (added only if registry publishing is chosen).
+- Every repository MUST use the shared CI at `@v1`.
 - The version is SemVer 0.x until the API is declared stable ([release.md](release.md)).
 
 ## Tests
@@ -298,8 +326,9 @@ lifecycle and `Error`.
 - `tests/docs/`: every code block on the documentation site compiles here (`<!-- generated: ... -->` regions).
 - `tests/install_consumer/`: installs the driver and builds a consumer with `find_package(hf_<chip>)` and
   `hf::<chip>`.
-- A version test: the CMake version, `idf_component.yml` and `GetDriverVersion()` agree.
-- `examples/esp32/` builds in CI (`esp32-examples-build-ci.yml`).
+- A version test: the CMake version, `_config/Doxyfile` and `GetDriverVersion()` agree.
+- `examples/host/` is built with the test flags and run by the host tests, and CI builds every
+  `examples/<platform>/` (`esp32-examples-build-ci.yml` for ESP32).
 
 ## Docs
 
@@ -315,7 +344,9 @@ The driver page set in [docs.md](docs.md), plus:
 ### MCU-bound drivers (ws2812-rmt)
 
 A driver that only makes sense on one MCU peripheral (the ESP32 RMT for WS2812) keeps the repository shell, the
-error model, the lifecycle and the naming, and says in its README and Contract page that it is platform-bound.
+root layout, the error model, the lifecycle and the naming, and says in its README and Contract page that it is
+platform-bound. It is the documented exception to [Platforms](#platforms): its code may be MCU-specific, and its
+`examples/host/` may be replaced by host tests over a mock of the peripheral.
 It MAY include the vendor SDK. Global-state C APIs move behind a multi-instance C++ class in their own header; the
 driver class owns its peripheral channel.
 

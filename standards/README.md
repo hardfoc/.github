@@ -61,7 +61,8 @@ tracked by an issue, not exempted.
 
 - Link the standard from the repository's `CONTRIBUTING.md` (or rely on the org default) and from its `AGENTS.md`.
 - Copy [`config/.clang-format`](config/.clang-format) and [`config/.clang-tidy`](config/.clang-tidy) into
-  `_config/` unchanged. A repository MUST NOT carry local edits to them; propose the change here.
+  `_config/` unchanged. A repository MUST NOT carry local edits to them; propose the change here. All other tool
+  configuration lives in `_config/` too, and the root follows [ADR-0011](adr/0011-repository-root-layout.md).
 - When a PR deviates from a MUST, say so in the PR description, name the rule, and link the issue that tracks the
   fix. A reviewer can refuse the deviation.
 - Start new repositories from the checklists; they are the standard condensed into steps.
@@ -93,3 +94,4 @@ These were decided with the owner on 3 November 2026 and are not reopened withou
 | One naming scheme, enforced by `clang-tidy` | [ADR-0008](adr/0008-naming.md) |
 | GPL-3.0 in every repository | [ADR-0009](adr/0009-gpl-3-0.md) |
 | C++20 in every repository | [ADR-0010](adr/0010-cpp20.md) |
+| The root holds only required and first-read files; tool configuration in `_config/`, no symlinks; one root `CMakeLists.txt` for CMake and ESP-IDF; platform code only in `examples/<platform>/` | [ADR-0011](adr/0011-repository-root-layout.md) |

@@ -9,6 +9,7 @@ checks; [driver.md](../driver.md) is the contract.
 - [ ] Entry added to `org/org-metadata.json` and applied; merge settings, security and rulesets applied
 - [ ] `CODEOWNERS`, `AGENTS.md`, `CLAUDE.md` (`@AGENTS.md`), `.claude/skills/verify/SKILL.md`
 - [ ] `LICENSE` is GPL-3.0; `_config/.clang-format` and `_config/.clang-tidy` copied unchanged from the standard
+- [ ] Root holds only the [allowed entries](../repo-governance.md#repository-root); `Doxyfile`, `mkdocs.yml` (`docs_dir: ../docs`) and `Kconfig` in `_config/`; `CONTRIBUTING.md`, `SECURITY.md` in `.github/`; no symlinks
 
 ### Code
 - [ ] Everything in `namespace <chip>`; class `<chip>::<CHIP>`; umbrella header `inc/<chip>.hpp`, implementation `src/<chip>.ipp`
@@ -29,7 +30,9 @@ checks; [driver.md](../driver.md) is the contract.
 - [ ] C++20; version only in `cmake/hf_<chip>_build_settings.cmake`; generated `<chip>_version.h`
 - [ ] `EXPORT_NAME <chip>` and alias `hf::<chip>`; install rules for every header, the `.ipp` and the package config
 - [ ] Options `HF_<CHIP>_BUILD_TESTS` and `HF_<CHIP>_ENABLE_WARNINGS`
-- [ ] `idf_component.yml` at the root; `examples/esp32` with `app_config.yml` and `CONFIG_FREERTOS_HZ=1000` in `sdkconfig.defaults`
+- [ ] Root `CMakeLists.txt` is also the ESP-IDF component (`ESP_PLATFORM`, `KCONFIG _config/Kconfig`); no `idf_component.yml`, no wrapper component
+- [ ] No SDK, RTOS or vendor header in `inc/` or `src/`; platform code only in `examples/<platform>/`, each with its own port
+- [ ] `examples/host/` built and run by the host tests; `examples/esp32` with `app_config.yml`, `EXTRA_COMPONENT_DIRS` at the root and `CONFIG_FREERTOS_HZ=1000` in `sdkconfig.defaults`
 - [ ] CI at `@v1` ending in the `CI gate` job; `CI gate / gate` required once it has run
 
 ### Tests
@@ -40,7 +43,7 @@ checks; [driver.md](../driver.md) is the contract.
 - [ ] Version agreement test
 
 ### Docs
-- [ ] The driver page set, including `docs/contract.md`
+- [ ] The driver page set, including `docs/contract.md` and `docs/platforms.md`; site config `_config/mkdocs.yml`
 - [ ] Doxygen clean with `EXTRACT_ALL = NO` and warnings as errors on `inc/`
 - [ ] Quickstart checks every return value; Porting shows a complete, compiled port
 - [ ] README sections per the README standard; datasheet in `docs/datasheet/`

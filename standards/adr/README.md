@@ -16,6 +16,7 @@ it, and the old one gets a `Superseded by ADR-NNNN` status.
 | [0008](0008-naming.md) | One naming scheme, enforced by `clang-tidy` | Accepted |
 | [0009](0009-gpl-3-0.md) | GPL-3.0 in every repository | Accepted |
 | [0010](0010-cpp20.md) | C++20 in every repository | Accepted |
+| [0011](0011-repository-root-layout.md) | The root holds only required and first-read files; tool configuration in `_config/`; platform code only in `examples/<platform>/` | Accepted |
 
 ## Format
 
